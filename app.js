@@ -176,8 +176,15 @@ function bindAddSheet() {
   $("#opt-tuition").addEventListener("click", () => { closeOverlay("addSheetOverlay"); openTuitionPaymentForm(); });
 }
 
-function goto(screen) { state.screen = screen; render(); window.scrollTo({ top: 0, behavior: "instant" in window ? "instant" : "auto" }); }
-
+function goto(screen) {
+ state.screen = screen;
+ render();
+ window.scrollTo(0, 0);
+ requestAnimationFrame(() => {
+   window.scrollTo(0, 1);
+   requestAnimationFrame(() => window.scrollTo(0, 0));
+ });
+}
 /* ---------------- render dispatcher ---------------- */
 const SCREEN_RENDERERS = {
   home: renderHome, activity: renderActivity, goals: renderGoals, more: renderMore,
