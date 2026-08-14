@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover" />
+<title>Waypoint — Personal Finance</title>
+<meta name="description" content="A personal, private finance tracker for daily income, expenses, savings and tuition." />
+<meta name="theme-color" content="#0b1224" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Waypoint" />
+<link rel="manifest" href="manifest.json" />
+<link rel="apple-touch-icon" href="icons/icon-192.png" />
+<link rel="icon" href="icons/icon-192.png" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<div id="app" class="app-shell">
+
+  <!-- Sidebar nav (tablet/desktop) -->
+  <nav class="sidebar-nav">
+    <div class="sidebar-brand"><span class="dot"></span> Waypoint</div>
+    <button class="nav-btn" data-screen="home"></button>
+    <button class="nav-btn" data-screen="activity"></button>
+    <button class="nav-btn" data-screen="goals"></button>
+    <button class="nav-btn" data-screen="more"></button>
+    <button class="nav-add js-open-add"></button>
+  </nav>
+
+  <main class="app-main">
+    <div class="screen active" id="screen-home"></div>
+    <div class="screen" id="screen-activity"></div>
+    <div class="screen" id="screen-goals"></div>
+    <div class="screen" id="screen-tuition"></div>
+    <div class="screen" id="screen-more"></div>
+    <div class="screen" id="screen-insights"></div>
+    <div class="screen" id="screen-plan"></div>
+    <div class="screen" id="screen-forecast"></div>
+    <div class="screen" id="screen-bills"></div>
+    <div class="screen" id="screen-settings"></div>
+  </main>
+
+  <!-- Floating glass nav (mobile) -->
+  <nav class="floating-nav">
+    <button class="nav-btn" data-screen="home"></button>
+    <button class="nav-btn" data-screen="activity"></button>
+    <button class="nav-add js-open-add"></button>
+    <button class="nav-btn" data-screen="goals"></button>
+    <button class="nav-btn" data-screen="more"></button>
+  </nav>
+
+  <!-- Add sheet -->
+  <div class="overlay" id="addSheetOverlay">
+    <div class="sheet">
+      <div class="sheet-handle"></div>
+      <div class="sheet-head"><div class="sheet-title">Add transaction</div><button class="icon-btn" data-close="addSheetOverlay"></button></div>
+      <div class="add-sheet-grid">
+        <button class="add-opt" id="opt-income"></button>
+        <button class="add-opt" id="opt-expense"></button>
+        <button class="add-opt" id="opt-savings"></button>
+        <button class="add-opt" id="opt-tuition"></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Generic form sheet -->
+  <div class="overlay" id="formSheetOverlay">
+    <div class="sheet" id="formSheetContent"></div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+</div>
+
+<script src="db.js"></script>
+<script src="icons.js"></script>
+<script src="calc.js"></script>
+<script src="app.js"></script>
+<script>
+  // Fill in icon-only nav buttons / add-sheet options now that WaypointIcons exists.
+  document.addEventListener("DOMContentLoaded", () => {
+    const I = WaypointIcons;
+    const TABS = [
+      { screen: "home", icon: "home", label: "Home" },
+      { screen: "activity", icon: "activity", label: "Activity" },
+      { screen: "goals", icon: "goals", label: "Goals" },
+      { screen: "more", icon: "more", label: "More" },
+    ];
+    document.querySelectorAll('.nav-btn[data-screen]').forEach(btn => {
+      const t = TABS.find(x => x.screen === btn.dataset.screen);
+      if (t) btn.innerHTML = I.get(t.icon, { size: 22 }) + `<span class="nav-label">${t.label}</span>`;
+    });
+    document.querySelectorAll('.js-open-add').forEach(btn => {
+      btn.innerHTML = btn.closest('.sidebar-nav') ? I.get('plus', { size: 20 }) + '<span class="nav-label">Add transaction</span>' : I.get('plus', { size: 24 });
+    });
+    document.querySelector('#addSheetOverlay [data-close]').innerHTML = I.get('close', { size: 18 });
+    const addOptions = [
+      { id: 'opt-income', icon: 'income', title: 'Add Income', sub: 'Record a payment you received' },
+      { id: 'opt-expense', icon: 'expense', title: 'Add Expense', sub: 'Log something you spent' },
+      { id: 'opt-savings', icon: 'savings', title: 'Add to Savings', sub: 'Contribute to an account' },
+      { id: 'opt-tuition', icon: 'graduation', title: 'Pay Tuition', sub: 'Reduce your tuition balance' },
+    ];
+    addOptions.forEach(o => {
+      document.getElementById(o.id).innerHTML = I.get(o.icon, { size: 22 }) + `<span>${o.title}</span>`;
+    });
+  });
+</script>
+</body>
+</html>
